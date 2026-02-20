@@ -1,0 +1,63 @@
+
+// function saveInput(){
+//     console.log("Button clicked!")
+// }
+// another way of adding button functions in the file which are used mostly 👇
+let myLeads = []
+let oldLeads = []
+let inputEl = document.getElementById("input-el")
+let inputBtn = document.getElementById("input-btn")
+
+const ulEl = document.getElementById("ul-el")
+
+const deleteBtn = document.getElementById("delete-btn")
+
+const leadsFromLocalStorage = JSON.parse(localStorage.getItem("myLeads"))
+
+const tabBtn = document.getElementById("tab-btn")
+
+if (leadsFromLocalStorage) {
+    myLeads = leadsFromLocalStorage
+    render(myLeads)
+}
+
+tabBtn.addEventListener("click", function () {
+    // console.log(tabs[0].url)
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        myLeads.push(tabs[0].url)
+        localStorage.setItem("myLeads", JSON.stringify(myLeads))
+        render(myLeads)
+    })
+
+})
+function render(leads) {
+    let listItems = ""
+    for (let i = 0; i < leads.length; i++) {
+        // listItems += "<li><a target ='_blank' href=' " + myLeads[i] + " '>" + myLeads[i] + "</a></li>"
+        listItems += `
+            <li>
+                <a target='_blank' href='$  {Leads[i]}'>${leads[i]}
+                </a>
+            </li>
+        `
+    }
+
+    ulEl.innerHTML = listItems
+}
+
+deleteBtn.addEventListener("dblclick", function () {
+    console.log("double clicked !")
+    localStorage.clear()
+    myLeads = []
+    render(myLeads)
+})
+inputBtn.addEventListener("click", function () {
+    myLeads.push(inputEl.value)
+    inputEl.value = ""
+    //save the myleads array to local storage
+    //remember JSON.stringify()
+    localStorage.setItem("myLeads", JSON.stringify(myLeads))
+    render(myLeads)
+})
+
+
